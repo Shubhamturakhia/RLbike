@@ -39,7 +39,7 @@ class BicycleBalanceEnv(gym.Env):
         self.Idc = self.Md * self.r ** 2
         self.Idv = 1.5 * self.Md * self.r ** 2
         self.Idl = 0.5 * self.Md * self.r ** 2
-        self.Itot = 13.0 / 3.0 * self.Mc * self.h ** 2
+        self.Itot = self.Mc * self.h ** 2
         self.sigmad = self.v / self.r
 
         # Angle at which to fail the episode

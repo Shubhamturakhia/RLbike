@@ -25,6 +25,18 @@ critic = CriticNetwork(action_dim=action_dim, state_dim= state_dim)
 actor = ActorNetwork(action_dim=action_dim, state_dim= state_dim)
 memory = Memory(5000000, state_dim, 1, 64)
 
+
+def first():
+    agent.bike_learning()
+
+def second():
+    agent.evaluate()
+
+def end():
+    agent.restore()
+    app = BicycleRender(agent, env)
+    app.run()
+
 with tf.Session() as sess:
     # create the agent and pass some parameters to the agent
     agent = Agent_DDPG(sess, actor, critic, memory, env=env,
@@ -33,11 +45,10 @@ with tf.Session() as sess:
                  render=False, max_episode=10000, env_name=ENV_NAME,
                  OUnoise_theta=0.15, OUnoise_sigma=0.1)
 
-    agent.bike_learning()
-    agent.evaluate()
-    agent.restore()
-    app = BicycleRender(agent, env)
-    app.run()
+    first()
+    second()
+    end()
+
 
 
 
