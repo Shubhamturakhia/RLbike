@@ -4,7 +4,7 @@ from envs.env_wrapper import *
 from mems.replay import *
 from nets.networks import *
 from matplotlib import pyplot as plt
-from BicycleRender import BicycleRender
+#from BicycleRender import BicycleRender
 
 
 # Define environment name
@@ -23,7 +23,7 @@ critic = CriticNetwork(action_dim=action_dim, state_dim= state_dim)
 
 # online actor and target actor
 actor = ActorNetwork(action_dim=action_dim, state_dim= state_dim)
-memory = Memory(5000000, state_dim, 1, 64)
+memory = Memory(50000, state_dim, 1, 64)
 
 
 def first():

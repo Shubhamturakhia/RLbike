@@ -1,1 +1,1 @@
-from deeprl.envs.BicycleBalanceEnv import BicycleBalanceEnv
+from envs.BicycleBalanceEnv import BicycleBalanceEnv
