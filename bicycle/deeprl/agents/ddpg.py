@@ -10,6 +10,8 @@ from gym.spaces import *
 from envs.env_wrapper import *
 from mems.replay import *
 from nets.networks import *
+import serial
+from struct import *
 
 # DDPG algorithm for bike
 class Agent_DDPG(BaseAgent):
@@ -236,6 +238,7 @@ class Agent_DDPG(BaseAgent):
             print("Episode: %s" % (epoch))
             # start the environment
             state = self.env.reset()
+            #print(state)
             step = 0
             done = False
             total_reward = 0
@@ -246,9 +249,11 @@ class Agent_DDPG(BaseAgent):
                     self.env.render()
 
                 reshaped_state = state[np.newaxis]
+                #print(reshaped_state)
 
                 # predict action using the network policy
                 action = self.action(reshaped_state)
+                #print(action)
 
                 # get the next state, reward and terminate signal
                 state, reward, done, _ = self.env.step(action.flatten())
@@ -256,6 +261,31 @@ class Agent_DDPG(BaseAgent):
                 step += 1
 
             print("Episode: {}/{} | Reward: {}" .format (epoch, self.max_test_epoch,total_reward))
+
+    def hardware_(self):
+        print ("Hardware setup testing....")
+
+        self.restore()
+
+        #TODO: Get the state of the bike at instantaneous time from Psoc (state)
+        #TODO: Return the action from the jetson to the Psoc
+        #TODO: Get the new state and apply it the the state var (used previously)
+        with serial.Serial("/dev/ttyTHS2", baudrate=9600) as ser:
+            while True:
+                state = ser.readline()  # state from bike
+                valid = verify_checksum(state)  # Check the validity of the data
+
+                if True:
+                    parsed_state = unpack('<fffffxx', state)
+                    parsed_state = np.array(parsed_state)
+                    print(parsed_state)
+                    reshaped_state = parsed_state[np.newaxis]
+                    print(reshaped_state)
+
+                    action = self.action(reshaped_state)
+                    print (action)
+                    packing_action = pack('!i', action[0])
+                    ser.write(packing_action)
 
 
     '''
@@ -304,3 +334,9 @@ class Agent_DDPG(BaseAgent):
     def get_action_gradient(self, s, a):
         return self.sess.run(self.critic.action_gradient,
                              feed_dict= {self.critic.state: s, self.critic.action: a})
+
+def verify_checksum (data):
+    if len(data)==(4*5+2):
+        return (np.sum(list(data)[:-2])% 255) == int (data[-2])
+    print("length", len(data))
+    return False

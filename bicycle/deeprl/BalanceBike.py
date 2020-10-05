@@ -37,6 +37,9 @@ def end():
     app = BicycleRender(agent, env)
     app.run()
 
+def only_hardware():
+    agent.hardware_()
+
 with tf.Session() as sess:
     # create the agent and pass some parameters to the agent
     agent = Agent_DDPG(sess, actor, critic, memory, env=env,
@@ -45,9 +48,7 @@ with tf.Session() as sess:
                  render=False, max_episode=10000, env_name=ENV_NAME,
                  OUnoise_theta=0.15, OUnoise_sigma=0.1)
 
-    first()
-    second()
-    end()
+    only_hardware()
 
 
 
