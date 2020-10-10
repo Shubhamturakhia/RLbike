@@ -275,7 +275,7 @@ class Agent_DDPG(BaseAgent):
                 state = ser.readline()  # state from bike
                 valid = verify_checksum(state)  # Check the validity of the data
 
-                if True:
+                if valid:
                     parsed_state = unpack('<fffffxx', state)
                     parsed_state = np.array(parsed_state)
                     print(parsed_state)
@@ -283,8 +283,11 @@ class Agent_DDPG(BaseAgent):
                     print(reshaped_state)
 
                     action = self.action(reshaped_state)
+                    action =np.array(action)
+
                     print (action)
-                    packing_action = pack('!i', action[0])
+                    packing_action = pack('!iBc', int(action[0][0]), 0, b'\n')
+                    packing_action = pack('!iBc', int(action[0][0]), generate_checksum(packing_action), b'\n')
                     ser.write(packing_action)
 
 
@@ -340,3 +343,7 @@ def verify_checksum (data):
         return (np.sum(list(data)[:-2])% 255) == int (data[-2])
     print("length", len(data))
     return False
+
+def generate_checksum (data):
+    return (np.sum(list(data)[:-2])% 255)
+

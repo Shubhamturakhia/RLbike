@@ -5,14 +5,19 @@ from mems.replay import *
 from nets.networks import *
 from matplotlib import pyplot as plt
 #from BicycleRender import BicycleRender
+from gym.envs.registration import register
 
+register(
+    id='BicycleBalance-v0',
+    entry_point='envs:BicycleBalanceEnv')
 
 # Define environment name
 ENV_NAME = "BicycleBalance-v0"
 
 # Initialize the environment
 #env = gym.make(ENV_NAME)
-env= ContinuousWrapper(gym.make(ENV_NAME))
+#env= ContinuousWrapper(gym.make(ENV_NAME))
+env = gym.make(ENV_NAME)
 # Get the action dimension and state dimension
 action_dim = env.action_space.shape[0] # action_dim = 1
 state_dim = env.observation_space.shape # state_dim = 5
@@ -20,11 +25,12 @@ state_dim = env.observation_space.shape # state_dim = 5
 # Initialize the network of DDPG algorithm
 # online critic and target critic
 critic = CriticNetwork(action_dim=action_dim, state_dim= state_dim)
+print("p2")
 
 # online actor and target actor
 actor = ActorNetwork(action_dim=action_dim, state_dim= state_dim)
-memory = Memory(50000, state_dim, 1, 64)
-
+memory = Memory(1000000, state_dim, 1, 64)
+print("p3")
 
 def first():
     agent.bike_learning()
