@@ -5,7 +5,6 @@ import numpy as np
 from os import path
 from numpy import sin, cos, tan, sqrt, arcsin, arctan, sign
 from matplotlib import pyplot as plt
-import enum
 
 class BicycleBalanceEnv(gym.Env):
     metadata = {
@@ -25,12 +24,12 @@ class BicycleBalanceEnv(gym.Env):
         self.c = 1.0652
         #self.dCM = 0.30
         self.h = 0.45782  # CM of complete bike
-        self.L = 1.11
+        self.L = 1.11 
         self.r = 0.34  # radius of tyre
         # Masses (in kilograms):
         self.Mc = 63.797    # Mass of bike (Bike model + CMG)
         self.Md = 1.7  # mass of tyre
-        #self.Mp = 60.0
+
         # Velocity of a bicycle (in meters per second), equal to 10 km/h:
         self.v = 10.0 * 1000.0 / 3600.0
 
@@ -43,9 +42,9 @@ class BicycleBalanceEnv(gym.Env):
         self.sigmad = self.v / self.r
 
         # Angle at which to fail the episode
-        self.omega_threshold = np.pi / 9
+        self.omega_threshold = np.pi/9
         self.theta_threshold = np.pi/2
-        self.max_torque = 2.0
+        self.max_torque = 2.0 # steering torque max (in postive and negative domain)
 
         high = np.array([
             self.theta_threshold,
@@ -53,6 +52,7 @@ class BicycleBalanceEnv(gym.Env):
             self.omega_threshold,
             np.finfo(np.float32).max,
             np.finfo(np.float32).max])
+        #Initialize action and obs space
         self.action_space = spaces.Box(low=-self.max_torque, high=self.max_torque, shape=(1,))
         self.observation_space = spaces.Box(low=-high, high=high)
 
@@ -88,7 +88,7 @@ class BicycleBalanceEnv(gym.Env):
         phi = self.omega + np.arctan(d / self.h)
 
         # Equations of motion.
-        # --------------------
+
         # Second derivative of angular acceleration:
         self.omegadd = 1 / self.Itot * (self.M * self.h * self.g * sin(phi)
                                    - cos(phi) * (self.Idc * self.sigmad * self.thetad
@@ -104,7 +104,7 @@ class BicycleBalanceEnv(gym.Env):
         self.thetad += self.thetadd * self.time_step
         self.theta += self.thetad * self.time_step
 
-        # Handlebars can't be turned more than 80 degrees.
+        # Handlebars can't be turned more than 80 degrees (1.3963 in rad)
         self.theta = np.clip(self.theta, -1.3963, 1.3963)
 
         # Tyre contact positions......
@@ -139,30 +139,6 @@ class BicycleBalanceEnv(gym.Env):
             self.xb += (self.xb - self.xf) * relative_error
             self.yb += (self.yb - self.yf) * relative_error
 
-        # Update heading, psi
-
-        #delta_y = self.yf - self.yb
-        #if (self.xf == self.xb) and delta_y < 0.0:
-        #    self.psi = np.pi
-        #else:
-        #    if delta_y > 0.0:
-        #        self.psi = arctan((self.xb - self.xf) / delta_y)
-        #    else:
-        #        self.psi = sign(self.xb - self.xf) * 0.5 * np.pi - arctan(delta_y / (self.xb - self.xf))
-
-        # # Update angle to goal, psig (Lagoudakis, 2002, calls this "psi")
-        # # --------------------
-        # self.yg = self.y_goal
-        # self.xg = self.x_goal
-        # delta_yg = self.yg - self.yb
-        # if (self.xg == self.xb) and delta_yg < 0.0:
-        #     psig = psi - np.pi
-        # else:
-        #     if delta_y > 0.0:
-        #         psig = psi - (arctan((xb - xg) / delta_yg))
-        #     else:
-        #         psig = psi - (sign(xb - xg) * 0.5 * np.pi - arctan(delta_yg / (xb - xg)))
-
         rewards = 0.01*self.omega**2 + 0.1 * self.omegad ** 2 + self.omegadd ** 2
         # costs = self.omega ** 2 + 0.1 * self.omegad ** 2 + 0.01 * self.omegadd ** 2
         self.rewards_omega = 0.01*self.omega**2
@@ -188,7 +164,6 @@ class BicycleBalanceEnv(gym.Env):
         self.yf = np.sqrt(self.L ** 2 - (self.xf - self.xb) ** 2) + self.yb
 
         self.psi = np.arctan((self.xb - self.xf) / (self.yf - self.yb))
-        # self.psig = self.psi - np.arctan((self.xb - self.x_goal) / (self.y_goal - self.yb))
 
         self.xfhist = []
         self.yfhist = []
