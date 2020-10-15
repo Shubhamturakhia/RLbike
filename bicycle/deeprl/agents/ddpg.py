@@ -284,10 +284,12 @@ class Agent_DDPG(BaseAgent):
 
                     action = self.action(reshaped_state)
                     action =np.array(action)
+                    action =action[0][0]*1000
+                    action = action/1000
 
-                    print (action)
-                    packing_action = pack('!iBc', int(action[0][0]), 0, b'\n')
-                    packing_action = pack('!iBc', int(action[0][0]), generate_checksum(packing_action), b'\n')
+                    print (float(action))
+                    packing_action = pack('!iBc', int(action), 0, b'\n')
+                    packing_action = pack('!iBc', int(action), generate_checksum(packing_action), b'\n')
                     ser.write(packing_action)
 
 
