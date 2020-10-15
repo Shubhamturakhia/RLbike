@@ -18,6 +18,7 @@ ENV_NAME = "BicycleBalance-v0"
 #env = gym.make(ENV_NAME)
 #env= ContinuousWrapper(gym.make(ENV_NAME))
 env = gym.make(ENV_NAME)
+
 # Get the action dimension and state dimension
 action_dim = env.action_space.shape[0] # action_dim = 1
 state_dim = env.observation_space.shape # state_dim = 5
@@ -25,12 +26,11 @@ state_dim = env.observation_space.shape # state_dim = 5
 # Initialize the network of DDPG algorithm
 # online critic and target critic
 critic = CriticNetwork(action_dim=action_dim, state_dim= state_dim)
-print("p2")
+
 
 # online actor and target actor
 actor = ActorNetwork(action_dim=action_dim, state_dim= state_dim)
 memory = Memory(1000000, state_dim, 1, 64)
-print("p3")
 
 def first():
     agent.bike_learning()
@@ -47,7 +47,7 @@ def only_hardware():
     agent.hardware_()
 
 with tf.Session() as sess:
-    # create the agent and pass some parameters to the agent
+    # create the agent 
     agent = Agent_DDPG(sess, actor, critic, memory, env=env,
                  max_test_epoch=2000, b4_train=5000,
                  max_step_per_game=100, plot=True,

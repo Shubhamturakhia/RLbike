@@ -184,7 +184,6 @@ class Agent_DDPG(BaseAgent):
                     term1.append(self.env.env.getReward()[0])
                     term2.append(self.env.env.getReward()[1])
                     term3.append(self.env.env.getReward()[2])
-                    # goals.append(self.env.env.get_goal())
 
             # Save model
             if episodes % self.save_interval == 0 and episodes != 0:
@@ -208,7 +207,6 @@ class Agent_DDPG(BaseAgent):
                         self.save_plot_data("term2", np.asarray(term2), is_train=True)
                         self.save_plot_data("term3", np.asarray(term3), is_train=True)
 
-                        # self.save_plot_data("goal", np.asarray(goals), is_train=True)
 
             episodes += 1
             per_game_q = per_game_q/per_game_step
@@ -219,7 +217,6 @@ class Agent_DDPG(BaseAgent):
                                                                           per_game_step))
 
         if self.plot:
-            #self.save_plot_data("total_step", np.asarray(total_step),is_train=True)
             self.save_plot_data("total_reward", np.asarray(total_reward),is_train=True)
             self.save_plot_data("term1", np.asarray(term1), is_train=True)
             self.save_plot_data("term2", np.asarray(term2), is_train=True)
@@ -267,9 +264,10 @@ class Agent_DDPG(BaseAgent):
 
         self.restore()
 
-        #TODO: Get the state of the bike at instantaneous time from Psoc (state)
-        #TODO: Return the action from the jetson to the Psoc
-        #TODO: Get the new state and apply it the the state var (used previously)
+        #TODO: Get the state of the bike at instantaneous time from Psoc (state) -- DONE
+        #TODO: Return the action from the jetson to the Psoc -- DONE
+        #TODO: Get the new state and apply it the the state var (used previously) -- DONE
+
         with serial.Serial("/dev/ttyTHS2", baudrate=9600) as ser:
             while True:
                 state = ser.readline()  # state from bike
@@ -340,6 +338,7 @@ class Agent_DDPG(BaseAgent):
         return self.sess.run(self.critic.action_gradient,
                              feed_dict= {self.critic.state: s, self.critic.action: a})
 
+# Verify the input data from M/c
 def verify_checksum (data):
     if len(data)==(4*5+2):
         return (np.sum(list(data)[:-2])% 255) == int (data[-2])
