@@ -267,16 +267,35 @@ class Agent_DDPG(BaseAgent):
         #TODO: Get the state of the bike at instantaneous time from Psoc (state) -- DONE
         #TODO: Return the action from the jetson to the Psoc -- DONE
         #TODO: Get the new state and apply it the the state var (used previously) -- DONE
+        
+        roll0=[]
+        roll1 =[]
+        roll2 =[]
+        steer1=[]
+        steer2=[]
+        act =[]
+
 
         with serial.Serial("/dev/ttyTHS2", baudrate=9600) as ser:
+
             while True:
                 state = ser.readline()  # state from bike
                 valid = verify_checksum(state)  # Check the validity of the data
+
 
                 if valid:
                     parsed_state = unpack('<fffffxx', state)
                     parsed_state = np.array(parsed_state)
                     print(parsed_state)
+
+                    
+                    roll0.append(parsed_state[0])
+                    print(roll0)
+                    roll1.append(parsed_state[1])
+                    roll2.append(parsed_state[2])
+                    steer1.append(parsed_state[3])
+                    steer2.append(parsed_state[4])
+
                     reshaped_state = parsed_state[np.newaxis]
                     print(reshaped_state)
 
@@ -285,10 +304,20 @@ class Agent_DDPG(BaseAgent):
                     action =action[0][0]*1000
                     action = action/1000
 
+                    act.append(action)
+                    print(act)
+
                     print (float(action))
                     packing_action = pack('!iBc', int(action), 0, b'\n')
                     packing_action = pack('!iBc', int(action), generate_checksum(packing_action), b'\n')
                     ser.write(packing_action)
+
+                self.save_plot_data("Roll_angle", np.asarray(roll0),is_train =True)
+                self.save_plot_data("Roll_velocity", np.asarray(roll1), is_train =True)
+                self.save_plot_data("Roll_accel", np.asarray(roll2), is_train =True)
+                self.save_plot_data("Steer_angle", np.asarray(steer1), is_train =True)
+                self.save_plot_data("Steer_velocity", np.asarray(steer2), is_train =True)
+                self.save_plot_data("Action", np.asarray(act), is_train =True)
 
 
     '''
