@@ -12,6 +12,8 @@ from mems.replay import *
 from nets.networks import *
 import serial
 from struct import *
+import time
+import matplotlib.pyplot as plt
 
 # DDPG algorithm for bike
 class Agent_DDPG(BaseAgent):
@@ -274,6 +276,8 @@ class Agent_DDPG(BaseAgent):
         steer1=[]
         steer2=[]
         act =[]
+        time1 =[]
+        plotting_time =[]
 
 
         with serial.Serial("/dev/ttyTHS2", baudrate=9600) as ser:
@@ -285,10 +289,11 @@ class Agent_DDPG(BaseAgent):
 
                 if valid:
                     parsed_state = unpack('<fffffxx', state)
+                    t1 = time.time()
                     parsed_state = np.array(parsed_state)
                     print(parsed_state)
 
-                    
+                    time1.append(t1)
                     roll0.append(parsed_state[0])
                     print(roll0)
                     roll1.append(parsed_state[1])
@@ -318,6 +323,19 @@ class Agent_DDPG(BaseAgent):
                 self.save_plot_data("Steer_angle", np.asarray(steer1), is_train =True)
                 self.save_plot_data("Steer_velocity", np.asarray(steer2), is_train =True)
                 self.save_plot_data("Action", np.asarray(act), is_train =True)
+
+                for i in range(0, len(time1)):
+                    time = time1[i+1] - time1[i]
+                    plotting_time.append(time)
+
+                plt.plot(plotting_time, roll0, 'bo')
+                plt.plot(plotting_time, roll1,'ro')
+                plt.plot(plotting_time, roll2, 'go')
+                plt.plot(plotting_time, steer1, 'yo')
+                plt.plot(plotting_time, steer2, 'co')
+                plt.plot(plotting_time, act,'mo')
+
+
 
 
     '''
