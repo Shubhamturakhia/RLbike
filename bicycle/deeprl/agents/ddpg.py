@@ -325,7 +325,10 @@ class Agent_DDPG(BaseAgent):
                 self.save_plot_data("Action", np.asarray(act), is_train =True)
 
                 for i in range(0, len(time1)):
-                    time = time1[i+1] - time1[i]
+                    if i==0:
+                        time = 0
+                    else:
+                        time = time1[i+1] - time1[i]
                     plotting_time.append(time)
 
                 plt.plot(plotting_time, roll0, 'bo')
