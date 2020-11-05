@@ -12,7 +12,7 @@ from mems.replay import *
 from nets.networks import *
 import serial
 from struct import *
-import time
+#import time
 import matplotlib.pyplot as plt
 
 # DDPG algorithm for bike
@@ -278,9 +278,12 @@ class Agent_DDPG(BaseAgent):
         act =[]
         time1 =[]
         plotting_time =[]
+        import time
+        t2 =time.time()
+        plt.ion()
 
 
-        with serial.Serial("/dev/ttyTHS2", baudrate=9600) as ser:
+        with serial.Serial("/dev/ttyTHS2", baudrate=115200) as ser:
 
             while True:
                 state = ser.readline()  # state from bike
@@ -289,32 +292,35 @@ class Agent_DDPG(BaseAgent):
 
                 if valid:
                     parsed_state = unpack('<fffffxx', state)
+                    import time 
                     t1 = time.time()
                     parsed_state = np.array(parsed_state)
                     print(parsed_state)
 
                     time1.append(t1)
                     roll0.append(parsed_state[0])
-                    print(roll0)
+                    #print(roll0)
                     roll1.append(parsed_state[1])
                     roll2.append(parsed_state[2])
                     steer1.append(parsed_state[3])
                     steer2.append(parsed_state[4])
 
                     reshaped_state = parsed_state[np.newaxis]
-                    print(reshaped_state)
+                    #print(reshaped_state)
 
                     action = self.action(reshaped_state)
                     action =np.array(action)
-                    action =action[0][0]*1000
-                    action = action/1000
+                    action =action[0][0]
 
                     act.append(action)
-                    print(act)
+                    #print(act)
+                    time =t1-t2
+                    plotting_time.append(time)
+                    t2=t1
 
                     print (float(action))
-                    packing_action = pack('!iBc', int(action), 0, b'\n')
-                    packing_action = pack('!iBc', int(action), generate_checksum(packing_action), b'\n')
+                    packing_action = pack('<iBc', int(action), 0, b'\n')
+                    packing_action = pack('<iBc', int(action), generate_checksum(packing_action), b'\n')
                     ser.write(packing_action)
 
                 self.save_plot_data("Roll_angle", np.asarray(roll0),is_train =True)
@@ -324,20 +330,21 @@ class Agent_DDPG(BaseAgent):
                 self.save_plot_data("Steer_velocity", np.asarray(steer2), is_train =True)
                 self.save_plot_data("Action", np.asarray(act), is_train =True)
 
-                for i in range(0, len(time1)):
-                    if i==0:
-                        time = 0
-                    else:
-                        time = time1[i+1] - time1[i]
-                    plotting_time.append(time)
-
-                plt.plot(plotting_time, roll0, 'bo')
-                plt.plot(plotting_time, roll1,'ro')
-                plt.plot(plotting_time, roll2, 'go')
-                plt.plot(plotting_time, steer1, 'yo')
-                plt.plot(plotting_time, steer2, 'co')
-                plt.plot(plotting_time, act,'mo')
-
+                #time = t1-t2
+                #plotting_time.append(time)
+                #t2=t1
+            
+                plt.plot(plotting_time, roll0, 'b-')
+                #plt.plot(plotting_time, roll1,'ro')
+                #plt.plot(plotting_time, roll2, 'go')
+                #plt.plot(plotting_time, steer1, 'y-')
+                #plt.plot(plotting_time, steer2, 'c-')
+                plt.plot(plotting_time, act, 'g-')
+                plt.savefig("testing_plots.png")
+                #plt.draw()
+                #plt.pause(0.001)
+            
+            
 
 
 

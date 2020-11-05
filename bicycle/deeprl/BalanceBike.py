@@ -5,7 +5,8 @@ from mems.replay import *
 from nets.networks import *
 from matplotlib import pyplot as plt
 #from BicycleRender import BicycleRender
-from gym.envs.registration import register
+from gym.envs.registration import register 
+
 
 register(
     id='BicycleBalance-v0',
