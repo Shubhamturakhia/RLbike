@@ -4,7 +4,7 @@ from envs.env_wrapper import *
 from mems.replay import *
 from nets.networks import *
 from matplotlib import pyplot as plt
-#from BicycleRender import BicycleRender
+from BicycleRender import BicycleRender
 from gym.envs.registration import register 
 
 
@@ -55,7 +55,7 @@ with tf.Session() as sess:
                  render=False, max_episode=10000, env_name=ENV_NAME,
                  OUnoise_theta=0.15, OUnoise_sigma=0.1)
 
-    only_hardware()
+    first()
 
 
 

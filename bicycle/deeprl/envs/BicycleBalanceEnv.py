@@ -44,7 +44,7 @@ class BicycleBalanceEnv(gym.Env):
         # Angle at which to fail the episode
         self.omega_threshold = np.pi/9
         self.theta_threshold = np.pi/2
-        self.max_torque = 4.0 # steering torque max (in postive and negative domain)
+        self.max_torque = 2.0 # steering torque max (in postive and negative domain)
 
         high = np.array([
             self.theta_threshold,
@@ -66,6 +66,7 @@ class BicycleBalanceEnv(gym.Env):
 
     def _step(self, u):
         T = np.clip(u, -self.max_torque, self.max_torque)[0]
+        #T =u
         d = 0.0
 
         # For record of the bike tire coordinates

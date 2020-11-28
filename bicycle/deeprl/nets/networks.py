@@ -110,7 +110,7 @@ class CriticNetwork(BaseNetwork):
             net = dense_layer(tf.concat((net, action),1), 300, use_bias=True, scope="fc2",
                                   initializer=self.initializer)
             net = tf.nn.relu(net)
-
+            #net = tf.keras.layers.GaussianNoise(0.1, input_shape=net)
             # for low dim, weights are from uniform[-3e-3, 3e-3]
             net = dense_layer(net, 1, initializer=tf.random_uniform_initializer(-3e-3, 3e-3), scope="q",
                                   use_bias=True)
@@ -153,6 +153,7 @@ class ActorNetwork(BaseNetwork):
         x = tf.placeholder(dtype=tf.float32, shape=(None, ) + self.state_dim, name="%s_input" % name)
         with tf.variable_scope(name):
             net = tf.nn.relu(dense_layer(x, 400, use_bias=True, scope="fc1", initializer=self.initializer))
+            #net = tf.keras.layers.GaussianNoise(0.1, input_shape=net)
             net = tf.nn.relu(dense_layer(net, 300, use_bias=True, scope="fc2", initializer=self.initializer))
 
             # use tanh to normalize output between [-1, 1]

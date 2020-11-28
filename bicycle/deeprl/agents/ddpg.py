@@ -123,6 +123,7 @@ class Agent_DDPG(BaseAgent):
 
                     #noise = ((self.max_episode-episodes)/self.max_episode)*self.noise.noise()
                     noise = self.noise.noise()
+                    print ("NOise", noise)
                     pure_action = self.action(current_state)
                     action = pure_action + noise
                     action = action.flatten()
@@ -180,8 +181,8 @@ class Agent_DDPG(BaseAgent):
                 total_reward.append(per_game_reward)
                 #total_step.append(per_game_step)
                 if "BicycleBalance-v0" in self.env_name:
-                    back_trajectory.append([self.env.env.get_xbhist(), self.env.env.get_ybhist()])
-                    front_trajectory.append([self.env.env.get_xfhist(), self.env.env.get_yfhist()])
+                    #back_trajectory.append([self.env.env.get_xbhist(), self.env.env.get_ybhist()])
+                    #front_trajectory.append([self.env.env.get_xfhist(), self.env.env.get_yfhist()])
                     #terms = self.env.env.getReward()
                     term1.append(self.env.env.getReward()[0])
                     term2.append(self.env.env.getReward()[1])
