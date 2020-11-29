@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/GAUSSIAN NOISE APPROACH 1.iml" filepath="$PROJECT_DIR$/.idea/GAUSSIAN NOISE APPROACH 1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../GAUSSIAN NOISE APPROACH 2/.idea/GAUSSIAN NOISE APPROACH 2.iml" filepath="$PROJECT_DIR$/../GAUSSIAN NOISE APPROACH 2/.idea/GAUSSIAN NOISE APPROACH 2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../GAUUS Approach 2 attempt 2/.idea/GAUUS Approach 2 attempt 2.iml" filepath="$PROJECT_DIR$/../GAUUS Approach 2 attempt 2/.idea/GAUUS Approach 2 attempt 2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../NO NOISE APPROACH 2/.idea/NO NOISE APPROACH 2.iml" filepath="$PROJECT_DIR$/../NO NOISE APPROACH 2/.idea/NO NOISE APPROACH 2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../OUNOISE APPROACH 1/.idea/OUNOISE APPROACH 1.iml" filepath="$PROJECT_DIR$/../OUNOISE APPROACH 1/.idea/OUNOISE APPROACH 1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../OUNOISE APPROACH 2/.idea/OUNOISE APPROACH 2.iml" filepath="$PROJECT_DIR$/../OUNOISE APPROACH 2/.idea/OUNOISE APPROACH 2.iml" />
+    </modules>
+  </component>
+</project>
