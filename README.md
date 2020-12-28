@@ -10,8 +10,8 @@ Achievement : Balancing time of 12-15 seconds was achieved on Smart Bicycle hard
 in regard to model training and hardware testing were also worked upon and need to be tested on the hardware system.
 
 ### Bicycle Hardware System
+<img src="https://user-images.githubusercontent.com/61676386/103193043-48e30b00-4898-11eb-8ef6-994fe7f87f9f.jpg" width="800">
 
-<img src="https://media-exp1.licdn.com/dms/image/C4E2DAQFgJXHk7eJojQ/profile-treasury-image-shrink_1280_1280/0/1605815211280?e=1608922800&v=beta&t=BqBQFb7YERycDddXzC2ksJzkqzloje866bKF3QCLNv8" width="800"/>
 
 ### Testing Videos
 
